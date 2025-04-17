@@ -1,3 +1,7 @@
+import json
+import os
+
+
 def store_with_builtin_hash(data):
     """
     Store items in a dictionary using Python's built-in hash() to simulate
@@ -13,34 +17,46 @@ def store_with_builtin_hash(data):
     return storage
 
 
-# to have an idea about the main and how to use the function:
+def process_dataset(file_path):
+    """
+    Load a dataset from a file, hash its keys using Python's built-in hash function,
+    and calculate collision statistics.
+    :param file_path: Path to the dataset file.
+    """
+    with open(file_path, "r") as f:
+        dataset = json.load(f)
 
-if __name__ == "__main__":
-    keys = ["apple", "banana", "orange", "apple", "grape", "banana"]
-    hashed_data = store_with_builtin_hash(keys)
+    print(f"\nProcessing dataset: {file_path}")
 
-    print("=== Hash Table ===")
-    for hval, items in hashed_data.items():
-        print(f"Hash: {hval} -> Items: {items}")
+    # Hash the dataset using the built-in hash function
+    hashed_data = store_with_builtin_hash(dataset)
 
-    collisions = {k: v for k, v in hashed_data.items() if len(v) > 1}
-    print("\n=== Collisions ===")
-    for hval, items in collisions.items():
-        print(f"Hash: {hval} -> {items}")
-
-    # Summary of collisions
-    total_keys = len(keys)
-    unique_hashes = len(hashed_data)
+    # Calculate collision statistics
     total_collisions = sum(1 for v in hashed_data.values() if len(v) > 1)
+    total_keys = len(dataset)
+    unique_hashes = len(hashed_data)
 
-    print("\n=== Collision Summary ===")
     print(f"Total keys: {total_keys}")
     print(f"Unique hash values: {unique_hashes}")
     print(f"Total collisions: {total_collisions}")
 
-print("\nNote: For consistent hash values across runs, set the environment variable:")
-print("PYTHONHASHSEED=0 python your_script.py")
+    # Display a few collisions if they exist
+    if total_collisions > 0:
+        print("\nSample collisions:")
+        for hval, items in hashed_data.items():
+            if len(items) > 1:
+                print(f"Hash: {hval} -> Items: {items}")
+                break  # Display only the first collision
 
-# You can measure collisions by checking where the value list has more than one item:
-# collisions = {k: v for k, v in hashed_data.items() if len(v) > 1}
-# print("Collisions:", collisions)
+
+if __name__ == "__main__":
+    # Directory containing the datasets
+    dataset_dir = "datasets"
+
+    # Process each dataset
+    for dataset_file in ["dataset_5k.json", "dataset_10k.json", "dataset_20k.json"]:
+        file_path = os.path.join(dataset_dir, dataset_file)
+        if os.path.exists(file_path):
+            process_dataset(file_path)
+        else:
+            print(f"Dataset file not found: {file_path}")
