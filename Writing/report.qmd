@@ -1,0 +1,16 @@
+---
+author: []
+title: 
+page-layout: full
+categories: []
+date: "2025-4-22"
+date-format: long
+toc: true
+format:
+    html:
+        code-links:    
+            - text: Github Repository
+              icon: github
+              href: https://github.com/ganderson03/algorithmology-all-hands-object-subclassing
+
+---
