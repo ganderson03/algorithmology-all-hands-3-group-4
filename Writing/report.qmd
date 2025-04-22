@@ -22,6 +22,30 @@ format:
 ### Python Hash
 
 ### Modulo Hash
+```python
+def simple_modulo_hash(key, modulo=1000):
+    # Calculate the sum of ASCII values of the characters in the key
+    ascii_sum = sum(ord(char) for char in key)
+    # Return the hash value as the modulo of the sum
+    return ascii_sum % modulo
+```
+This function takes two inputs, `key` which is a string and `modulo` as an integer that determines the range of the hash values (default 1000). Each character in the string is converted to its ASCII value using the `ord` function. The sum of the ASCII values id divided by the `modulo` value and the remainder is taken, this ensures the hash value is between 0 and the `modulo - 1` which is important for being able to index the hash value inside of the bucket. 
+
+```python
+ # Inline implementation of hashing with the simple modulo-based hash function
+    hashed_data = {}
+    for key, value in dataset.items():
+        h = simple_modulo_hash(key, modulo)  # Use the simple modulo-based hash function
+        if h in hashed_data:
+            hashed_data[h].append((key, value))  # Handle collisions
+        else:
+            hashed_data[h] = [(key, value)]
+```
+The keys in hashed_data are the hash values computed from the simple_modulo_hash function, and the values in hashed_data are lists of tuples. Each tuple contains the original key and its associated value from the dataset.
+
+The algorithm iterates through all key-value pairs in the dataset and computes hash values for the keys using simple_modulo_hash. If a hash value already exists as a key in hashed_data, the key-value pair is appended to the list of items stored under that hash value (h). If the hash value does not exist, a new entry is created in hashed_data with the hash value as the key and the key-value pair as the first item in the list.
+
+The Modulo Hashing algorithm has a time of O(n) also known as linear time complexity. We came to this conclusion by running a doubling experiment using 5k, 10k, and 20k key dictionaries and timing how long it took to hash each. As the amount of keys doubled so did the run times confirming the linear time complexity. While showing a mostly linear pattern there was a small up tick in run times for each increase beyond the expected doubling due to an increase in collisions for the larger data sets. 
 
 ### Murmur Hash
 
