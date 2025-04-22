@@ -14,3 +14,22 @@ format:
               href: https://github.com/ganderson03/algorithmology-all-hands-3-group-4
 
 ---
+
+## Overview
+
+## Implementation
+
+### Python Hash
+
+### Modulo Hash
+
+### Murmur Hash
+
+### SHA-256
+
+## Data
+
+## Analysis
+
+## Conclusion
+
