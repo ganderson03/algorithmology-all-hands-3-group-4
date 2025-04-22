@@ -1,6 +1,6 @@
 ---
-author: []
-title: Hashing Collision
+author: [Coltin Colucci, Grant Anderson, Gabriel Salvatore, Javier, Joseph Oforkansi]
+title: Collision and Run Time Analysis of Hashing Algorithms
 page-layout: full
 categories: []
 date: "2025-4-22"
