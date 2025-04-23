@@ -144,25 +144,66 @@ The function also incorporates a seed value, allowing for customizable hash outp
 ### DJB2
 
 ## Data
-
-```text
-| Hash Method | Dataset     | Total Keys | Unique Hash Values | Total Collisions | Avg Time Taken (s) | Seed Value | Modulo Value |
-|-------------|-------------|------------|--------------------|------------------|--------------------|------------|--------------|
-| builtin     | dataset_5k  | 5000       | 5000               | 0                | 0.0056             | --         | --           |
-| builtin     | dataset_10k | 10000      | 10000              | 0                | 0.0109             | --         | --           |
-| builtin     | dataset_20k | 20000      | 20000              | 0                | 0.0216             | --         | --           |
-| murmur      | dataset_5k  | 1          | 1                  | N/A              | 0.0540             | 1000       | --           |
-| murmur      | dataset_10k | 1          | 1                  | N/A              | 0.1075             | 1000       | --           |
-| murmur      | dataset_20k | 1          | 1                  | N/A              | 0.2160             | 1000       | --           |
-| modulo      | dataset_5k  | 5000       | 376                | 331              | 0.0129             | --         | 1000         |
-| modulo      | dataset_10k | 10000      | 406                | 371              | 0.0247             | --         | 1000         |
-| modulo      | dataset_20k | 20000      | 436                | 404              | 0.0526             | --         | 1000         |
-| djb2        | dataset_5k  | 5000       | 4826               | 174              | 0.0165             | --         | --           |
-| djb2        | dataset_10k | 10000      | 9270               | 730              | 0.0316             | --         | --           |
-| djb2        | dataset_20k | 20000      | 17293              | 2707             | 0.0675             | --         | --           |
+```
+Hash Algorithm | Dataset | Run | Total Keys | Unique Hash Values | Total Collisions | Time Taken (s) | Seed Value | Modulo Value
+builtin | dataset_5k | 1 | 5000 | 5000 | 0 | 0.0056 | -- | --
+builtin | dataset_5k | 2 | 5000 | 5000 | 0 | 0.0042 | -- | --
+builtin | dataset_5k | 3 | 5000 | 5000 | 0 | 0.0044 | -- | --
+builtin | dataset_10k | 1 | 10000 | 10000 | 0 | 0.0109 | -- | --
+builtin | dataset_10k | 2 | 10000 | 10000 | 0 | 0.0094 | -- | --
+builtin | dataset_10k | 3 | 10000 | 10000 | 0 | 0.0087 | -- | --
+builtin | dataset_20k | 1 | 20000 | 20000 | 0 | 0.0216 | -- | --
+builtin | dataset_20k | 2 | 20000 | 20000 | 0 | 0.0196 | -- | --
+builtin | dataset_20k | 3 | 20000 | 20000 | 0 | 0.0187 | -- | --
+murmur | dataset_5k | 1 | 5000 | 1 | 4999 | 0.0540 | 1000 | --
+murmur | dataset_5k | 2 | 5000 | 1 | 4999 | 0.0543 | 1000 | --
+murmur | dataset_5k | 3 | 5000 | 1 | 4999 | 0.0547 | 1000 | --
+murmur | dataset_10k | 1 | 10000 | 1 | 9999 | 0.1075 | 1000 | --
+murmur | dataset_10k | 2 | 10000 | 1 | 9999 | 0.1066 | 1000 | --
+murmur | dataset_10k | 3 | 10000 | 1 | 9999 | 0.1069 | 1000 | --
+murmur | dataset_20k | 1 | 20000 | 1 | 19999 | 0.2160 | 1000 | --
+murmur | dataset_20k | 2 | 20000 | 1 | 19999 | 0.2173 | 1000 | --
+murmur | dataset_20k | 3 | 20000 | 1 | 19999 | 0.2174 | 1000 | --
+modulo | dataset_5k | 1 | 5000 | 376 | 4624 | 0.0129 | -- | 1000
+modulo | dataset_5k | 2 | 5000 | 376 | 4624 | 0.0115 | -- | 1000
+modulo | dataset_5k | 3 | 5000 | 376 | 4624 | 0.0119 | -- | 1000
+modulo | dataset_10k | 1 | 10000 | 406 | 9594 | 0.0247 | -- | 1000
+modulo | dataset_10k | 2 | 10000 | 406 | 9594 | 0.0234 | -- | 1000
+modulo | dataset_10k | 3 | 10000 | 406 | 9594 | 0.0234 | -- | 1000
+modulo | dataset_20k | 1 | 20000 | 436 | 19564 | 0.0526 | -- | 1000
+modulo | dataset_20k | 2 | 20000 | 436 | 19564 | 0.0491 | -- | 1000
+modulo | dataset_20k | 3 | 20000 | 436 | 19564 | 0.0493 | -- | 1000
+djb2 | dataset_5k | 1 | 5000 | 4826 | 174 | 0.0165 | -- | --
+djb2 | dataset_5k | 2 | 5000 | 4826 | 174 | 0.0156 | -- | --
+djb2 | dataset_5k | 3 | 5000 | 4826 | 174 | 0.0157 | -- | --
+djb2 | dataset_10k | 1 | 10000 | 9270 | 730 | 0.0316 | -- | --
+djb2 | dataset_10k | 2 | 10000 | 9270 | 730 | 0.0317 | -- | --
+djb2 | dataset_10k | 3 | 10000 | 9270 | 730 | 0.0317 | -- | --
+djb2 | dataset_20k | 1 | 20000 | 17293 | 2707 | 0.0675 | -- | --
+djb2 | dataset_20k | 2 | 20000 | 17293 | 2707 | 0.0672 | -- | --
+djb2 | dataset_20k | 3 | 20000 | 17293 | 2707 | 0.0634 | -- | --
 ```
 
+In order to consistently test the hash algorithms, each hash method was
+ran three times for each dataset file along with 1000 utilized as
+the seed/modulo value in order to maintain consistency with the
+outputs, as well as each function.
+
 ## Analysis
+
+The four currently implemented hash algorithms utilize different approaches
+when finding distinct hash values, which results in different amounts of time
+taken for them to run along with different amounts of collisions (with some
+hash algorithms returning with no collisions whatsoever). These include the
+builtin algorithms (which returns no collisions at all) and the djb2 hash function,
+which returns 174 collisions when ran using the dataset_5k.json file.
+
+By far the fastest hash algorithm is the builtin hash function, which overall
+runs at twice the speed of the next fastest algorithm (modulo) and three times
+as fast as the next fastest hash algorithm (djb2). This means that when
+prioritizing efficency, users would likely prefer to opt for the builtin algorithm,
+while users searching for collisions would be more likely to run murmur, which has
+the most collisions out of any algorithm.
 
 ## Conclusion
 
