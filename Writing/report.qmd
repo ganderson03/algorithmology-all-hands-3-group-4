@@ -59,7 +59,17 @@ The keys in `hashed_data` are the hash values computed from the `simple_modulo_h
 
 The algorithm iterates through all key-value pairs in the dataset and computes hash values for the keys using simple_modulo_hash. If a hash value already exists as a key in hashed_data, the key-value pair is appended to the list of items stored under that hash value (h). If the hash value does not exist, a new entry is created in hashed_data with the hash value as the key and the key-value pair as the first item in the list.
 
-The Modulo Hashing algorithm has a time complexity of O(n), also known as linear time. We came to this conclusion by running a doubling experiment using 5k, 10k, and 20k key dictionaries and timing how long it took to hash each. As the number of keys doubled so did the runtimes, confirming the linear time complexity. While showing a mostly linear pattern there was a small uptick in runtimes at each increase—likely due to a rise in collisions for the larger datasets.
+The Modulo Hashing algorithm has a time complexity of O(n), also known as linear time. We came to this conclusion by running a doubling experiment using 5k, 10k, and 20k-key dictionaries and timing how long it took to hash each dataset. As the number of keys doubled, so did the runtimes, confirming the linear time complexity.
+
+This is shown by the average runtimes for each dataset:
+
+5k → 0.0129 seconds
+
+10k → 0.0247 seconds
+
+20k → 0.0526 seconds
+
+This data shows a clear doubling in runtime as the number of entries doubles. While the pattern is mostly linear, there was a small uptick in runtimes with each increase—likely due to a rise in collisions for the larger datasets.
 
 ### Murmur Hash
 
