@@ -21,6 +21,8 @@ format:
 
 ## Implementation
 
+During this experiment, we tested multiple different hashing algorithms and tracked both the number of collisions and the runtimes. We conducted a doubling experiment, increasing the dataset sizes from 5k to 10k and finally to 20k. This allowed us to identify the time complexities of each algorithm and gain a better understanding of how additional data entries impact the number of collisions.
+
 ### Python Hash
 
 ### Modulo Hash
