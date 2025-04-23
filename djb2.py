@@ -7,11 +7,11 @@ from typing import Dict
 
 
 def djb2(key: str) -> int:
-    """Hash function: DJB2 with 12-bit truncation for collision analysis."""
+    """Hash function: DJB2 with 10-bit truncation for collision analysis."""
     h = 5381
     for c in key:
         h = ((h << 5) + h) + ord(c)  # h * 33 + ord(c)
-    return h & 0xFFFF  # 12-bit hash space (4096 buckets)
+    return h & 0x3FF  # 10-bit hash space (0–1023)
 
 
 def load_json_dataset(file_path: str) -> Dict[str, str]:
@@ -38,12 +38,10 @@ def calculate_collisions(dataset: Dict[str, str], title: str = "") -> int:
     elapsed_time = end_time - start_time
 
     print(f"Total keys: {len(dataset)}")
-    print(f"  Distinct hash values: {len(hash_buckets)}")
-    print(f"  Total collisions (buckets with >1 key): {total_collisions}")
-    print(f"  Total colliding keys (extra keys in collision buckets): {total_colliding_keys}")
+    print(f"  Unique hash values: {len(hash_buckets)}")
+    print(f"  Total collisions {total_collisions}")
     print(f"Time taken to hash dataset: {elapsed_time:.4f} seconds")
 
-    # plot_bucket_histogram(hash_buckets, title)
 
     return total_colliding_keys
 
