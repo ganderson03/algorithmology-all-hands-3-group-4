@@ -1,5 +1,5 @@
 ---
-author: [Coltin Colucci, Grant Anderson, Gabriel Salvatore, Javier, Joseph Oforkansi]
+author: [Joseph Oforkansi, Hank Gref, Coltin Colucci, Grant Anderson, Gabriel Salvatore, Javier]
 title: Collision and Run Time Analysis of Hashing Algorithms
 page-layout: full
 categories: []
