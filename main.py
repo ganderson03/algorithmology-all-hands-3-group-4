@@ -5,7 +5,7 @@ import time
 import argparse
 from python_hash import process_dataset as process_builtin_hash
 from modulo_hash import process_dataset as process_modulo_hash
-from murmur_hash import hash_dataset
+from murmur_hash import process_dataset as process_murmur_hash
 from djb2 import load_json_dataset, calculate_collisions
 
 # Directory containing datasets
@@ -57,13 +57,7 @@ def run_murmur_hash(dataset_file, seed=0):
 
     print(f"Running MurmurHash on dataset: {dataset_file}")
     start_time = time.time()
-    try:
-        hashes = hash_dataset(file_path, seed)  # Capture results (hashes) from the function
-        print(f"Processed {len(hashes)} entries.")
-        print(f"Hashes: {hashes[:10]}...")  # Print the first 10 hashes for brevity
-    except FileNotFoundError:
-        print(f"Error: The file '{dataset_file}' was not found.")
-        return
+    process_murmur_hash(file_path, seed)  # Call the process_dataset function for MurmurHash
     end_time = time.time()
     print(f"Time taken: {end_time - start_time:.4f} seconds")
 
