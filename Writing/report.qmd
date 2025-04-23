@@ -141,7 +141,7 @@ Any remaining bytes that do not fit into a 4-byte chunk are processed separately
 
 The function also incorporates a seed value, allowing for customizable hash outputs. This implementation is particularly effective for applications requiring fast and reliable hashing, such as hash tables or data indexing.
 
-### SHA-256
+### DJB2
 
 ## Data
 
