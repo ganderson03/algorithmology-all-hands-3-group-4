@@ -1,5 +1,5 @@
 ---
-author: [Joseph Oforkansi, Hank Gref, Coltin Colucci, Grant Anderson, Gabriel Salvatore, Javier]
+author: [Joseph Oforkansi, Hank Gref, Coltin Colucci, Grant Anderson, Gabriel Salvatore, Javier Bejarano Jimenez]
 title: Collision and Run Time Analysis of Hashing Algorithms
 page-layout: full
 categories: []
@@ -19,7 +19,7 @@ format:
 
 ## Introduction
 
-we picked this project because we wanted to figure out how different ways of hashing data affect how often you get the same "address" (collisions) and how fast it takes to do the hashing. Our main question is: **How do different hashing methods (like Python's built-in hash(), MurmurHash, SHA-256, and CityHash) change the number of collisions and how quickly they run when you're storing data in a dictionary?**
+we picked this project because we wanted to figure out how different ways of hashing data affect how often you get the same "address" (collisions) and how fast it takes to do the hashing. Our main question is: **How do different hashing methods (like Python's built-in hash(), MurmurHash, DJB@, and modulo_hash) change the number of collisions and how quickly they run when you're storing data in a dictionary?**
 
 It's really important to understand this because when you store lots of information, you want to find it quickly and not have different pieces of information end up in the same spot. That's what collisions are, and too many slow things down. So, by comparing these hashing methods, we hope to give people good information for choosing the best one for their needs.
 
@@ -252,7 +252,7 @@ which returns 174 collisions when ran using the dataset_5k.json file.
 By far the fastest hash algorithm is the builtin hash function, which overall
 runs at twice the speed of the next fastest algorithm (modulo) and three times
 as fast as the next fastest hash algorithm (djb2). This means that when
-prioritizing efficency, users would likely prefer to opt for the builtin algorithm,
+prioritizing efficiency, users would likely prefer to opt for the builtin algorithm,
 while users searching for collisions would be more likely to run murmur, which has
 the most collisions out of any algorithm.
 
