@@ -1,11 +1,13 @@
-"""MurmurHash implementation with dataset loading."""
+"""MurmurHash implementation with dataset loading and collision analysis."""
 
-from typing import List
+from typing import List, Dict
+import json
+import os
+import time
 
 
 def murmurhash(key: str, seed: int = 0) -> int:
-    """Compute the MurmurHash for a given string.
-    """
+    """Compute the MurmurHash for a given string."""
     key_bytes = key.encode('utf-8')
     length = len(key_bytes)
     h = seed
@@ -47,26 +49,60 @@ def murmurhash(key: str, seed: int = 0) -> int:
     return h
 
 
-def load_dataset(file_path: str) -> List[str]:
-    """Load a dataset from a file, where each line is treated as a separate entry."""
-    with open(file_path, 'r', encoding='utf-8') as file:
-        return [line.strip() for line in file]
+def process_dataset(file_path: str, seed: int = 0):
+    """
+    Load a dataset from a file, hash its keys using MurmurHash, and calculate collision statistics.
+    :param file_path: Path to the dataset file.
+    :param seed: Seed value for the MurmurHash function.
+    """
+    with open(file_path, 'r') as f:
+        dataset = json.load(f)
 
+    print(f"\nProcessing dataset: {file_path}")
 
-def hash_dataset(file_path: str, seed: int = 0) -> List[int]:
-    """Hash each line of a dataset using MurmurHash."""
-    dataset = load_dataset(file_path)
-    return [murmurhash(line, seed) for line in dataset]
+    # Start timing
+    start_time = time.time()
+
+    # Hash the dataset using MurmurHash
+    hashed_data: Dict[int, List[str]] = {}
+    for key, value in dataset.items():
+        h = murmurhash(key, seed)  # Compute the MurmurHash
+        if h in hashed_data:
+            hashed_data[h].append((key, value))  # Handle collisions
+        else:
+            hashed_data[h] = [(key, value)]
+
+    # Stop timing
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+
+    # Calculate collision statistics
+    total_collisions = sum(1 for v in hashed_data.values() if len(v) > 1)
+    total_keys = len(dataset)
+    unique_hashes = len(hashed_data)
+
+    print(f"Total keys: {total_keys}")
+    print(f"Unique hash values: {unique_hashes}")
+    print(f"Total collisions: {total_collisions}")
+    print(f"Time taken to hash dataset: {elapsed_time:.4f} seconds")
+
+    # Display a few collisions if they exist
+    if total_collisions > 0:
+        print("\nSample collisions:")
+        for hval, items in hashed_data.items():
+            if len(items) > 1:
+                print(f"Hash: {hval} -> Items: {items}")
+                break  # Display only the first collision
 
 
 if __name__ == "__main__":
-    # Example usage
-    dataset_file = "dataset.txt"  # Replace with the path to your dataset file
-    seed_value = 42
+    # Directory containing the datasets
+    datasets_dir = os.path.join(os.path.dirname(__file__), "datasets")
 
-    try:
-        hashes = hash_dataset(dataset_file, seed_value)
-        for i, h in enumerate(hashes, start=1):
-            print(f"Line {i}: Hash = {h}")
-    except FileNotFoundError:
-        print(f"Error: The file '{dataset_file}' was not found.")
+    # List all dataset files in the directory
+    dataset_files = [f for f in os.listdir(datasets_dir) if f.endswith(".json")]
+
+    # Process each dataset file
+    for dataset_file in dataset_files:
+        dataset_path = os.path.join(datasets_dir, dataset_file)
+        process_dataset(dataset_path, seed=42)
