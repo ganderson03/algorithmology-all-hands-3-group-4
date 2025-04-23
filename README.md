@@ -7,7 +7,7 @@ The program can run the following algorithms:
 - Murmur Hash
 - Modulo Hashing
 - Python's built-in hash function
-- SHA256 Hashing
+- DJB2 Hashing
 
 ## Team Members
 
@@ -22,5 +22,12 @@ The program can run the following algorithms:
 
 1. Navigate to algorithmology-all-hands-3-group-4 directory.
 2. Run command
-    - python main.py [algorithm] [file] [--modulo (modulo algorithm) / --seed (Murmur Hash algorithm)] [value]
+    - for built in: 
+        - python main.py builtin [file] 
+    - for murmur:
+        - python main.py murmur [file] --seed [value]
+    - for modulo:
+        - python main.py modulo [file] --modulo [value]
+    - for djb2:
+        - python main.py djb2 [file] 
 3. Output will be in terminal!

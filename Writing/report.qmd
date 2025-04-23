@@ -12,6 +12,8 @@ format:
             - text: Github Repository
               icon: github
               href: https://github.com/ganderson03/algorithmology-all-hands-3-group-4
+        code-fold: true
+        code-summary: "Show the code"
 
 ---
 
@@ -22,16 +24,17 @@ format:
 ### Python Hash
 
 ### Modulo Hash
-```python
+```{python}
 def simple_modulo_hash(key, modulo=1000):
     # Calculate the sum of ASCII values of the characters in the key
     ascii_sum = sum(ord(char) for char in key)
     # Return the hash value as the modulo of the sum
     return ascii_sum % modulo
 ```
+
 This function takes two inputs, `key` which is a string and `modulo` as an integer that determines the range of the hash values (default 1000). Each character in the string is converted to its ASCII value using the `ord` function. The sum of the ASCII values id divided by the `modulo` value and the remainder is taken, this ensures the hash value is between 0 and the `modulo - 1` which is important for being able to index the hash value inside of the bucket. 
 
-```python
+```{python}
  # Inline implementation of hashing with the simple modulo-based hash function
     hashed_data = {}
     for key, value in dataset.items():
@@ -41,6 +44,7 @@ This function takes two inputs, `key` which is a string and `modulo` as an integ
         else:
             hashed_data[h] = [(key, value)]
 ```
+
 The keys in hashed_data are the hash values computed from the simple_modulo_hash function, and the values in hashed_data are lists of tuples. Each tuple contains the original key and its associated value from the dataset.
 
 The algorithm iterates through all key-value pairs in the dataset and computes hash values for the keys using simple_modulo_hash. If a hash value already exists as a key in hashed_data, the key-value pair is appended to the list of items stored under that hash value (h). If the hash value does not exist, a new entry is created in hashed_data with the hash value as the key and the key-value pair as the first item in the list.
@@ -48,6 +52,84 @@ The algorithm iterates through all key-value pairs in the dataset and computes h
 The Modulo Hashing algorithm has a time of O(n) also known as linear time complexity. We came to this conclusion by running a doubling experiment using 5k, 10k, and 20k key dictionaries and timing how long it took to hash each. As the amount of keys doubled so did the run times confirming the linear time complexity. While showing a mostly linear pattern there was a small up tick in run times for each increase beyond the expected doubling due to an increase in collisions for the larger data sets. 
 
 ### Murmur Hash
+
+```{python}
+def murmurhash(key: str, seed: int = 0) -> int:
+    """Compute the MurmurHash for a given string.
+    """
+    key_bytes = key.encode('utf-8')
+    length = len(key_bytes)
+    h = seed
+    c1 = 0xcc9e2d51
+    c2 = 0x1b873593
+    r1 = 15
+    r2 = 13
+    m = 5
+    n = 0xe6546b64
+
+    # Process the input in 4-byte chunks
+    for i in range(0, length // 4):
+        k = int.from_bytes(key_bytes[i * 4:(i + 1) * 4], byteorder='little')
+        k = (k * c1) & 0xFFFFFFFF
+        k = (k << r1 | k >> (32 - r1)) & 0xFFFFFFFF
+        k = (k * c2) & 0xFFFFFFFF
+
+        h ^= k
+        h = (h << r2 | h >> (32 - r2)) & 0xFFFFFFFF
+        h = (h * m + n) & 0xFFFFFFFF
+
+    # Process the remaining bytes
+    remaining_bytes = length & 3
+    if remaining_bytes:
+        k = int.from_bytes(key_bytes[-remaining_bytes:], byteorder='little')
+        k = (k * c1) & 0xFFFFFFFF
+        k = (k << r1 | k >> (32 - r1)) & 0xFFFFFFFF
+        k = (k * c2) & 0xFFFFFFFF
+        h ^= k
+
+    # Finalize the hash
+    h ^= length
+    h ^= (h >> 16)
+    h = (h * 0x85ebca6b) & 0xFFFFFFFF
+    h ^= (h >> 13)
+    h = (h * 0xc2b2ae35) & 0xFFFFFFFF
+    h ^= (h >> 16)
+
+    return h
+
+
+def load_dataset(file_path: str) -> List[str]:
+    """Load a dataset from a file, where each line is treated as a separate entry."""
+    with open(file_path, 'r', encoding='utf-8') as file:
+        return [line.strip() for line in file]
+
+
+def hash_dataset(file_path: str, seed: int = 0) -> List[int]:
+    """Hash each line of a dataset using MurmurHash."""
+    dataset = load_dataset(file_path)
+    return [murmurhash(line, seed) for line in dataset]
+
+
+if __name__ == "__main__":
+    # Example usage
+    dataset_file = "dataset.txt"  # Replace with the path to your dataset file
+    seed_value = 42
+
+    try:
+        hashes = hash_dataset(dataset_file, seed_value)
+        for i, h in enumerate(hashes, start=1):
+            print(f"Line {i}: Hash = {h}")
+    except FileNotFoundError:
+        print(f"Error: The file '{dataset_file}' was not found.")
+```
+
+The implementation of MurmurHash in the provided code is a 32-bit non-cryptographic hash function designed for efficiency and uniform distribution. 
+
+The function begins by encoding the input string into bytes and processing it in 4-byte chunks. Each chunk is transformed using a series of multiplications, bitwise rotations, and masking operations to ensure randomness and minimize collisions. 
+
+Any remaining bytes that do not fit into a 4-byte chunk are processed separately to ensure all input data contributes to the final hash. The hash value is further refined in a finalization step, where it undergoes additional bitwise operations and multiplications to improve distribution. 
+
+The function also incorporates a seed value, allowing for customizable hash outputs. This implementation is particularly effective for applications requiring fast and reliable hashing, such as hash tables or data indexing.
 
 ### SHA-256
 
