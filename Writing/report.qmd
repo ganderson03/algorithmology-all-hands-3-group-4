@@ -136,7 +136,6 @@ The function also incorporates a seed value, allowing for customizable hash outp
 ## Data
 
 ```text
-```text
 | Hash Method | Dataset     | Total Keys | Unique Hash Values | Total Collisions | Avg Time Taken (s) | Seed Value | Modulo Value |
 |-------------|-------------|------------|--------------------|------------------|--------------------|------------|--------------|
 | builtin     | dataset_5k  | 5000       | 5000               | 0                | 0.0056             | --         | --           |
