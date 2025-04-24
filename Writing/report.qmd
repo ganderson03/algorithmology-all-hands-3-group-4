@@ -336,3 +336,17 @@ the most collisions out of any algorithm.
 
 ## Conclusion
 
+Our investigation into the collision frequency and runtime efficiency of various hashing algorithms has yielded several key insights relevant to dictionary-based data storage.
+
+The **Python built-in `hash()` function** demonstrated exceptional performance in terms of runtime, consistently exhibiting the fastest hashing times across all dataset sizes. Furthermore, it produced zero collisions in our tests, indicating a highly effective distribution for the generated random string keys. This makes it a strong candidate when speed is paramount and a low collision rate is essential.
+
+The **Modulo Hash** function, while exhibiting a linear time complexity similar to other algorithms, suffered from a significantly higher collision rate. With a modulo value of 1000, the number of unique hash values was drastically lower than the total number of keys, leading to a large number of collisions. While simple to implement, its poor collision characteristics make it less suitable for applications where minimizing collisions is crucial.
+
+**MurmurHash**, when used with a consistent seed value of 1000, resulted in the extreme case of mapping all keys to the same hash value, leading to the maximum possible number of collisions. While the algorithm itself is known for its speed and good distribution with varying seeds, our specific test configuration highlighted its sensitivity to the seed value and its potential for severe collisions if not chosen carefully. Its runtime performance was generally slower than the built-in hash and modulo hash but comparable to DJB2.
+
+The **DJB2 hash function**, even with a 10-bit truncation designed to increase collisions for analysis, presented a reasonable balance between runtime and collision frequency. It was slower than the built-in hash and modulo hash but faster than MurmurHash in our tests. The number of collisions was significantly lower than the modulo hash, suggesting a better distribution even within the limited hash space. This makes DJB2 a potential compromise when some collision resistance is needed without a significant performance penalty.
+
+In summary, the choice of hashing algorithm involves trade-offs between runtime efficiency and collision frequency. Python's built-in `hash()` appears to be the most performant and collision-resistant for our tested datasets. However, it's important to note that its behavior might vary depending on the data types and distribution of keys. Modulo hashing, in its simple form, is fast but prone to high collision rates. MurmurHash's performance is highly dependent on the seed value, and DJB2 offers a middle ground.
+
+Further research could explore the performance of these algorithms with different types of datasets (e.g., numerical keys, more structured string patterns), the impact of varying seed and modulo values, and a more in-depth analysis of the more advanced SHA-256 and CityHash algorithms, as initially intended. Understanding these nuances is crucial for making informed decisions when designing efficient and reliable dictionary-based data storage solutions.
+
