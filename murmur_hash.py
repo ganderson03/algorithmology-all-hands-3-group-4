@@ -46,7 +46,8 @@ def murmurhash(key: str, seed: int = 0) -> int:
     h = (h * 0xc2b2ae35) & 0xFFFFFFFF
     h ^= (h >> 16)
 
-    return h
+    # Mask the hash to 10 bits
+    return h & 0x3FF
 
 
 def process_dataset(file_path: str, seed: int = 0):
