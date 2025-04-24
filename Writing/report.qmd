@@ -33,6 +33,84 @@ During this experiment, we tested multiple different hashing algorithms and trac
 
 ### Python Hash
 
+Python’s built-in hash() takes a value (like a number or a string) and gives back a unique-looking number. That number is called a hash value.
+
+We use it to quickly find or store data in things like:
+
+- `Dictionaries` (`dict`)
+
+- `Sets` (`set`)
+
+Hashing helps Python put things into `buckets` — which makes looking them up really fast.
+
+Our Experiment
+We wanted to see how well Python’s `hash()` function spreads things into different buckets.
+
+Here’s the code we used to store items by their hash values:
+
+```{python}
+def store_with_builtin_hash(data):
+    storage = {}
+    for item in data:
+        h = hash(item)
+        if h in storage:
+            storage[h].append(item)  # Potential collision
+        else:
+            storage[h] = [item]
+    return storage
+```
+
+What it does:
+
+- For each item, it gets its hash value.
+
+- If a bucket (hash) already exists, it adds the item there.
+
+- If not, it creates a new bucket for that hash.
+
+- If multiple items land in the same bucket — that’s a `collision`.
+
+Then I wrote this code to analyze a dataset and report how `hash()` performed:
+
+```{python}
+def process_dataset(file_path):
+    """
+    Load a dataset from a file, hash its keys using Python's built-in hash function,
+    and calculate collision statistics.
+    :param file_path: Path to the dataset file.
+    """
+    with open(file_path, "r") as f:
+        dataset = json.load(f)
+
+    print(f"\nProcessing dataset: {file_path}")
+
+    # Hash the dataset using the built-in hash function
+    hashed_data = store_with_builtin_hash(dataset)
+
+    # Calculate collision statistics
+    total_collisions = sum(1 for v in hashed_data.values() if len(v) > 1)
+    total_keys = len(dataset)
+    unique_hashes = len(hashed_data)
+
+    print(f"Total keys: {total_keys}")
+    print(f"Unique hash values: {unique_hashes}")
+    print(f"Total collisions: {total_collisions}")
+
+    # Display a few collisions if they exist
+    if total_collisions > 0:
+        print("\nSample collisions:")
+        for hval, items in hashed_data.items():
+            if len(items) > 1:
+                print(f"Hash: {hval} -> Items: {items}")
+                break  # Display only the first collision
+```
+
+This code tell us:
+
+- the total number of items in the dataset.
+- The total number of unique buckets utilized.
+- The number of instances where multiple items were assigned to the same bucket (referred to as `collisions`).
+
 ### Modulo Hash
 ```{python}
 def simple_modulo_hash(key, modulo=1000):
