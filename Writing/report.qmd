@@ -33,6 +33,84 @@ During this experiment, we tested multiple different hashing algorithms and trac
 
 ### Python Hash
 
+Python’s built-in hash() takes a value (like a number or a string) and gives back a unique-looking number. That number is called a hash value.
+
+We use it to quickly find or store data in things like:
+
+- `Dictionaries` (`dict`)
+
+- `Sets` (`set`)
+
+Hashing helps Python put things into `buckets` — which makes looking them up really fast.
+
+Our Experiment
+We wanted to see how well Python’s `hash()` function spreads things into different buckets.
+
+Here’s the code we used to store items by their hash values:
+
+```{python}
+def store_with_builtin_hash(data):
+    storage = {}
+    for item in data:
+        h = hash(item)
+        if h in storage:
+            storage[h].append(item)  # Potential collision
+        else:
+            storage[h] = [item]
+    return storage
+```
+
+What it does:
+
+- For each item, it gets its hash value.
+
+- If a bucket (hash) already exists, it adds the item there.
+
+- If not, it creates a new bucket for that hash.
+
+- If multiple items land in the same bucket — that’s a `collision`.
+
+Then I wrote this code to analyze a dataset and report how `hash()` performed:
+
+```{python}
+def process_dataset(file_path):
+    """
+    Load a dataset from a file, hash its keys using Python's built-in hash function,
+    and calculate collision statistics.
+    :param file_path: Path to the dataset file.
+    """
+    with open(file_path, "r") as f:
+        dataset = json.load(f)
+
+    print(f"\nProcessing dataset: {file_path}")
+
+    # Hash the dataset using the built-in hash function
+    hashed_data = store_with_builtin_hash(dataset)
+
+    # Calculate collision statistics
+    total_collisions = sum(1 for v in hashed_data.values() if len(v) > 1)
+    total_keys = len(dataset)
+    unique_hashes = len(hashed_data)
+
+    print(f"Total keys: {total_keys}")
+    print(f"Unique hash values: {unique_hashes}")
+    print(f"Total collisions: {total_collisions}")
+
+    # Display a few collisions if they exist
+    if total_collisions > 0:
+        print("\nSample collisions:")
+        for hval, items in hashed_data.items():
+            if len(items) > 1:
+                print(f"Hash: {hval} -> Items: {items}")
+                break  # Display only the first collision
+```
+
+This code tell us:
+
+- the total number of items in the dataset.
+- The total number of unique buckets utilized.
+- The number of instances where multiple items were assigned to the same bucket (referred to as `collisions`).
+
 ### Modulo Hash
 ```{python}
 def simple_modulo_hash(key, modulo=1000):
@@ -257,4 +335,18 @@ while users searching for collisions would be more likely to run murmur, which h
 the most collisions out of any algorithm.
 
 ## Conclusion
+
+Our investigation into the collision frequency and runtime efficiency of various hashing algorithms has yielded several key insights relevant to dictionary-based data storage.
+
+The **Python built-in `hash()` function** demonstrated exceptional performance in terms of runtime, consistently exhibiting the fastest hashing times across all dataset sizes. Furthermore, it produced zero collisions in our tests, indicating a highly effective distribution for the generated random string keys. This makes it a strong candidate when speed is paramount and a low collision rate is essential.
+
+The **Modulo Hash** function, while exhibiting a linear time complexity similar to other algorithms, suffered from a significantly higher collision rate. With a modulo value of 1000, the number of unique hash values was drastically lower than the total number of keys, leading to a large number of collisions. While simple to implement, its poor collision characteristics make it less suitable for applications where minimizing collisions is crucial.
+
+**MurmurHash**, when used with a consistent seed value of 1000, resulted in the extreme case of mapping all keys to the same hash value, leading to the maximum possible number of collisions. While the algorithm itself is known for its speed and good distribution with varying seeds, our specific test configuration highlighted its sensitivity to the seed value and its potential for severe collisions if not chosen carefully. Its runtime performance was generally slower than the built-in hash and modulo hash but comparable to DJB2.
+
+The **DJB2 hash function**, even with a 10-bit truncation designed to increase collisions for analysis, presented a reasonable balance between runtime and collision frequency. It was slower than the built-in hash and modulo hash but faster than MurmurHash in our tests. The number of collisions was significantly lower than the modulo hash, suggesting a better distribution even within the limited hash space. This makes DJB2 a potential compromise when some collision resistance is needed without a significant performance penalty.
+
+In summary, the choice of hashing algorithm involves trade-offs between runtime efficiency and collision frequency. Python's built-in `hash()` appears to be the most performant and collision-resistant for our tested datasets. However, it's important to note that its behavior might vary depending on the data types and distribution of keys. Modulo hashing, in its simple form, is fast but prone to high collision rates. MurmurHash's performance is highly dependent on the seed value, and DJB2 offers a middle ground.
+
+Further research could explore the performance of these algorithms with different types of datasets (e.g., numerical keys, more structured string patterns), the impact of varying seed and modulo values, and a more in-depth analysis of the more advanced SHA-256 and CityHash algorithms, as initially intended. Understanding these nuances is crucial for making informed decisions when designing efficient and reliable dictionary-based data storage solutions.
 
